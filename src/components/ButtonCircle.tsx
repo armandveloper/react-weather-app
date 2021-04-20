@@ -5,21 +5,25 @@ interface ButtonCircleProps {
 	title?: string;
 	icon?: string;
 	variant?: string;
+	size?: string;
 }
 
 const ButtonCircleStyled = styled.button.attrs<{ title: string }>((props) => ({
 	title: props.title,
-}))<{ variant: string }>`
+}))<{ variant: string; size: string }>`
 	background-color: ${({ variant }) =>
 		variant === 'gray'
 			? 'rgba(110, 112, 122, 0.3)'
 			: variant === 'light'
-			? '#110E3C'
+			? 'var(--color-text)'
 			: 'var(--color-blue)'};
 	border-radius: 50%;
 	border: none;
 	color: ${({ variant }) => (variant === 'light' ? '#110E3C' : '#E7E7EB')};
 	cursor: pointer;
+	font-family: inherit;
+	font-size: ${({ size }) => (size === 'lg' ? '1.8rem' : '1.6rem')};
+	font-weight: ${({ size }) => (size === 'lg' ? '700' : '500')};
 	height: 4rem;
 	width: 4rem;
 	display: inline-flex;
@@ -35,9 +39,10 @@ function ButtonCircle({
 	title,
 	icon,
 	variant = 'blue',
+	size = 'normal',
 }: ButtonCircleProps) {
 	return (
-		<ButtonCircleStyled variant={variant} title={title}>
+		<ButtonCircleStyled size={size} variant={variant} title={title}>
 			{text}
 			{icon && <span className="material-icons">{icon}</span>}
 		</ButtonCircleStyled>

@@ -4,9 +4,14 @@ interface ButtonProps {
 	text: string;
 	variant?: string;
 	shadow?: boolean;
+	disabled?: boolean;
+	onClick?(): void;
 }
 
-const ButtonStyled = styled.button<{ variant: string; shadow: boolean }>`
+const ButtonStyled = styled.button<{
+	variant: string;
+	shadow: boolean;
+}>`
 	background-color: ${({ variant }) =>
 		variant === 'blue' ? 'var(--color-blue)' : 'var(--color-gray)'};
 	border: none;
@@ -18,14 +23,30 @@ const ButtonStyled = styled.button<{ variant: string; shadow: boolean }>`
 	font-weight: 500;
 	margin: 0;
 	padding: 1rem 1.8rem;
+	transition: opacity 0.3s ease;
 	&:focus {
 		outline: none;
 	}
+	&:disabled {
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
 `;
 
-function Button({ text, variant = 'blue', shadow = false }: ButtonProps) {
+function Button({
+	onClick,
+	text,
+	variant = 'blue',
+	shadow = false,
+	disabled = false,
+}: ButtonProps) {
 	return (
-		<ButtonStyled variant={variant} shadow={shadow}>
+		<ButtonStyled
+			onClick={onClick}
+			variant={variant}
+			shadow={shadow}
+			disabled={disabled}
+		>
 			{text}
 		</ButtonStyled>
 	);

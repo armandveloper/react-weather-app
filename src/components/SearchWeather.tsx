@@ -1,25 +1,10 @@
-import styled, { keyframes } from 'styled-components';
-import Button from './Button';
+import { useContext, useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { slideDown, slideUp } from '../animations';
+import { WeatherContext } from '../context/WeatherContext';
+import WeatherForm from './WeatherForm';
 
-const slideUp = keyframes`
-  from {
-    transform: translate3d(0, 100%, 0);
-  }
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-`;
-
-const slideDown = keyframes`
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(0, 100%, 0);
-  }
-`;
-
-const SearchWeatherStyled = styled.div`
+const SearchWeatherStyled = styled.div<{ show: boolean }>`
 	background-color: var(--bg-sidebar);
 	height: 100vh;
 	padding: 1.8rem 1.2rem;
@@ -27,10 +12,7 @@ const SearchWeatherStyled = styled.div`
 	position: fixed;
 	bottom: 0;
 	left: 0;
-	animation: ${slideUp} 0.5s ease-out;
-	&.out {
-		animation: ${slideDown} 0.5s ease-out forwards;
-	}
+	animation: ${({ show }) => (show ? slideUp : slideDown)} 0.5s ease-out;
 	@media (min-width: 56.25em) {
 		width: 32rem;
 	}
@@ -54,38 +36,6 @@ const SearchWeatherStyled = styled.div`
 		&:focus,
 		&:hover {
 			transform: scale(1.15);
-		}
-	}
-	.form {
-		height: 4.8rem;
-		margin-top: 3rem;
-		display: grid;
-		grid-template-columns: 1fr 8.6rem;
-		gap: 1.2rem;
-	}
-	.input-wrapper {
-		display: grid;
-		grid-template-columns: 1.5rem 1.8rem 1fr;
-		align-items: center;
-		span {
-			color: #616475;
-			grid-row: 1;
-			grid-column: 2;
-		}
-	}
-	.input {
-		background: none;
-		border: 1px solid var(--color-text);
-		color: inherit;
-		font: inherit;
-		height: 100%;
-		padding-left: 4.5rem;
-		padding-right: 1rem;
-		width: 100%;
-		grid-row: 1;
-		grid-column: 1 / -1;
-		&:focus {
-			outline: none;
 		}
 	}
 	.location-list {
@@ -113,25 +63,27 @@ const SearchWeatherStyled = styled.div`
 	}
 `;
 
-function SearchWeather() {
+function SearchWeather({ show }: { show: boolean }) {
+	const { hideSearchWeather } = useContext(WeatherContext);
+
+	const [shouldRender, setRender] = useState(show);
+
+	useEffect(() => {
+		if (show) setRender(true);
+	}, [show]);
+
+	const handleAnimationEnd = () => {
+		if (!show) setRender(false);
+	};
+
+	if (!shouldRender) return null;
+
 	return (
-		<SearchWeatherStyled>
-			<button className="btn-close">
+		<SearchWeatherStyled onAnimationEnd={handleAnimationEnd} show={show}>
+			<button className="btn-close" onClick={hideSearchWeather}>
 				<span className="material-icons">close</span>
 			</button>
-			<form className="form">
-				<div className="input-wrapper">
-					<span className="material-icons">search</span>
-					<input
-						type="text"
-						placeholder="search location"
-						autoFocus={true}
-						aria-label="Search location"
-						className="input"
-					/>
-				</div>
-				<Button text="Search" />
-			</form>
+			<WeatherForm />
 			<ul className="location-list">
 				<li className="location-item">
 					London

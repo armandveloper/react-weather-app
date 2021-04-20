@@ -1,4 +1,6 @@
+import { useContext } from 'react';
 import styled from 'styled-components';
+import { WeatherContext } from '../context/WeatherContext';
 import Button from './Button';
 import ButtonCircle from './ButtonCircle';
 
@@ -10,9 +12,16 @@ const SidebarTopStyled = styled.nav`
 `;
 
 function SidebarTop() {
+	const { showSearchWeather } = useContext(WeatherContext);
+
 	return (
 		<SidebarTopStyled>
-			<Button variant="gray" shadow={true} text="Search for places" />
+			<Button
+				onClick={showSearchWeather}
+				variant="gray"
+				shadow={true}
+				text="Search for places"
+			/>
 			<ButtonCircle variant="gray" title="Click" icon="gps_fixed" />
 		</SidebarTopStyled>
 	);
