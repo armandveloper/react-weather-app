@@ -1,40 +1,49 @@
+import { useContext } from 'react';
 import styled from 'styled-components';
+import { WeatherContext } from '../context/WeatherContext';
 import Forecast from './Forecast';
+import Loader from './Loader';
 import TodayHightlights from './TodayHightlights';
 import UnitSwitch from './UnitSwitch';
 
 const MainWeatherStyled = styled.main`
 	width: 100%;
 	overflow-y: auto;
-	scrollbar-color: var(--color-blue) var(--color-text);
-	scrollbar-width: thin;
-	&::-webkit-scrollbar {
-		border-radius: 1rem;
-		width: 0.5rem;
-		height: 2rem;
-	}
-	&::-webkit-scrollbar-track {
-		background-color: var(--color-text);
-	}
-	&::-webkit-scrollbar-thumb {
-		background-color: var(--color-blue);
-		border-radius: 1rem;
-	}
 	.wrapper {
 		margin: 0 auto;
-		max-width: 70.4rem;
+		max-width: 80rem;
 		width: 100%;
+		@media (min-width: 75em) {
+			padding: 0 2rem;
+		}
+		@media (min-width: 85em) {
+			padding: 0;
+		}
+	}
+	.center {
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 `;
 
 function MainWeather() {
+	const { isLoading } = useContext(WeatherContext);
+
 	return (
 		<MainWeatherStyled>
-			<div className="wrapper">
-				<UnitSwitch />
-				<Forecast />
-				<TodayHightlights />
-			</div>
+			{isLoading ? (
+				<div className="center">
+					<Loader />
+				</div>
+			) : (
+				<div className="wrapper">
+					<UnitSwitch />
+					<Forecast />
+					<TodayHightlights />
+				</div>
+			)}
 		</MainWeatherStyled>
 	);
 }

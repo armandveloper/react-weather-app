@@ -2,17 +2,19 @@ import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { slideDown, slideUp } from '../animations';
 import { WeatherContext } from '../context/WeatherContext';
+import LocationList from './LocationList';
 import WeatherForm from './WeatherForm';
 
 const SearchWeatherStyled = styled.div<{ show: boolean }>`
 	background-color: var(--bg-sidebar);
 	height: 100vh;
 	padding: 1.8rem 1.2rem;
+	overflow-y: auto;
 	width: 100%;
 	position: fixed;
 	bottom: 0;
 	left: 0;
-	animation: ${({ show }) => (show ? slideUp : slideDown)} 0.5s ease-out;
+	animation: ${({ show }) => (show ? slideUp : slideDown)} 0.4s ease-out;
 	@media (min-width: 56.25em) {
 		width: 32rem;
 	}
@@ -38,28 +40,9 @@ const SearchWeatherStyled = styled.div<{ show: boolean }>`
 			transform: scale(1.15);
 		}
 	}
-	.location-list {
-		list-style: none;
-		margin: 3.5rem 0 0;
-		padding: 0;
-	}
-	.location-item {
-		border: 1px solid transparent;
-		cursor: pointer;
-		margin-bottom: 3.5rem;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 2rem 1.2rem;
-		span {
-			opacity: 0;
-		}
-		&:hover {
-			border-color: #616475;
-			span {
-				opacity: 1;
-			}
-		}
+	.error {
+		margin-top: 4rem;
+		font-size: 1.8rem;
 	}
 `;
 
@@ -76,6 +59,8 @@ function SearchWeather({ show }: { show: boolean }) {
 		if (!show) setRender(false);
 	};
 
+	const [isSearchError, setSearchError] = useState(false);
+
 	if (!shouldRender) return null;
 
 	return (
@@ -83,21 +68,15 @@ function SearchWeather({ show }: { show: boolean }) {
 			<button className="btn-close" onClick={hideSearchWeather}>
 				<span className="material-icons">close</span>
 			</button>
-			<WeatherForm />
-			<ul className="location-list">
-				<li className="location-item">
-					London
-					<span className="material-icons">chevron_right</span>
-				</li>
-				<li className="location-item">
-					París
-					<span className="material-icons">chevron_right</span>
-				</li>
-				<li className="location-item">
-					Madrid
-					<span className="material-icons">chevron_right</span>
-				</li>
-			</ul>
+			<WeatherForm setSearchError={setSearchError} />
+
+			{isSearchError ? (
+				<div className="error">
+					<p>No results found</p>
+				</div>
+			) : (
+				<LocationList />
+			)}
 		</SearchWeatherStyled>
 	);
 }

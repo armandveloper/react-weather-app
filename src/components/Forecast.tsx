@@ -1,4 +1,6 @@
+import { useContext } from 'react';
 import styled from 'styled-components';
+import { WeatherContext } from '../context/WeatherContext';
 import ForecastCard from './ForecastCard';
 
 const ForecastStyled = styled.ul`
@@ -15,13 +17,15 @@ const ForecastStyled = styled.ul`
 `;
 
 function Forecast() {
+	const { weather } = useContext(WeatherContext);
+
+	const forecast = weather?.consolidated_weather.slice(1);
+
 	return (
 		<ForecastStyled>
-			<ForecastCard />
-			<ForecastCard />
-			<ForecastCard />
-			<ForecastCard />
-			<ForecastCard />
+			{forecast?.map((weather, i) => (
+				<ForecastCard key={weather.id} weather={weather} index={i} />
+			))}
 		</ForecastStyled>
 	);
 }

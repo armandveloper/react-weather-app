@@ -26,5 +26,23 @@ export default createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     background-color: var(--bg-body);
     color: var(--color-text);
+    scrollbar-color: var(--color-blue) var(--color-text);
+	  scrollbar-width: thin;
+ 
   }
+  @media (any-hover: hover) {
+    ::-webkit-scrollbar {
+    border-radius: 1rem;
+    width: 0.5rem;
+    height: 2rem;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: var(--color-text);
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-blue);
+    border-radius: 1rem;
+  }
+  }
+  
 `;

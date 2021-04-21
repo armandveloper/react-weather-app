@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { FormEvent, useContext, useState } from 'react';
 import styled from 'styled-components';
+import { WeatherContext } from '../context/WeatherContext';
 import Button from './Button';
 
 const WeatherFormStyled = styled.form`
@@ -35,13 +36,36 @@ const WeatherFormStyled = styled.form`
 	}
 `;
 
-function WeatherForm() {
+function WeatherForm({ setSearchError }: { setSearchError(v: boolean): void }) {
 	const [location, setLocation] = useState('');
+	const [prevLocation, setPrevLocation] = useState(location);
 
 	const disableButton = () => location.length < 3;
 
+	const [isLoading, setLoading] = useState(false);
+
+	const { searchLocation } = useContext(WeatherContext);
+
+	const handleSearch = (e: FormEvent) => {
+		e.preventDefault();
+		if (location.length < 3 || location === prevLocation) return;
+		setLoading(true);
+		searchLocation(location)
+			.then(() => {
+				setPrevLocation(location);
+				setLocation('');
+				setSearchError(false);
+			})
+			.catch((err) => {
+				setSearchError(true);
+			})
+			.finally(() => {
+				setLoading(false);
+			});
+	};
+
 	return (
-		<WeatherFormStyled>
+		<WeatherFormStyled onSubmit={handleSearch}>
 			<div className="input-wrapper">
 				<span className="material-icons">search</span>
 				<input
@@ -54,7 +78,11 @@ function WeatherForm() {
 					onChange={({ target }) => setLocation(target.value)}
 				/>
 			</div>
-			<Button text="Search" disabled={disableButton()} />
+			<Button
+				loading={isLoading}
+				text="Search"
+				disabled={disableButton()}
+			/>
 		</WeatherFormStyled>
 	);
 }

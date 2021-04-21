@@ -4,6 +4,7 @@ import { WeatherContext } from '../context/WeatherContext';
 import SidebarTop from './SidebarTop';
 import SidebarWeatherResult from './SidebarWeatherResult';
 import SearchWeather from './SearchWeather';
+import Loader from './Loader';
 
 const SidebarStyled = styled.aside`
 	background-color: var(--bg-sidebar);
@@ -17,12 +18,12 @@ const SidebarStyled = styled.aside`
 `;
 
 function Sidebar() {
-	const { isSearching } = useContext(WeatherContext);
+	const { isSearching, isLoading } = useContext(WeatherContext);
+
 	return (
 		<SidebarStyled>
 			<SidebarTop />
-			<SidebarWeatherResult />
-			{/* {isSearching && <SearchWeather />} */}
+			{isLoading ? <Loader /> : <SidebarWeatherResult />}
 			<SearchWeather show={isSearching} />
 		</SidebarStyled>
 	);

@@ -6,6 +6,7 @@ interface ButtonCircleProps {
 	icon?: string;
 	variant?: string;
 	size?: string;
+	onClick?(): void;
 }
 
 const ButtonCircleStyled = styled.button.attrs<{ title: string }>((props) => ({
@@ -29,6 +30,7 @@ const ButtonCircleStyled = styled.button.attrs<{ title: string }>((props) => ({
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	transition: background 0.3s ease, color 0.3s ease;
 	&:focus {
 		outline: none;
 	}
@@ -40,9 +42,15 @@ function ButtonCircle({
 	icon,
 	variant = 'blue',
 	size = 'normal',
+	onClick,
 }: ButtonCircleProps) {
 	return (
-		<ButtonCircleStyled size={size} variant={variant} title={title}>
+		<ButtonCircleStyled
+			onClick={onClick}
+			size={size}
+			variant={variant}
+			title={title}
+		>
 			{text}
 			{icon && <span className="material-icons">{icon}</span>}
 		</ButtonCircleStyled>

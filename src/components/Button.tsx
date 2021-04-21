@@ -1,10 +1,12 @@
 import styled from 'styled-components';
+import Loader from './Loader';
 
 interface ButtonProps {
 	text: string;
 	variant?: string;
 	shadow?: boolean;
 	disabled?: boolean;
+	loading?: boolean;
 	onClick?(): void;
 }
 
@@ -39,15 +41,16 @@ function Button({
 	variant = 'blue',
 	shadow = false,
 	disabled = false,
+	loading = false,
 }: ButtonProps) {
 	return (
 		<ButtonStyled
 			onClick={onClick}
 			variant={variant}
 			shadow={shadow}
-			disabled={disabled}
+			disabled={disabled || loading}
 		>
-			{text}
+			{loading ? <Loader size={1.5} /> : text}
 		</ButtonStyled>
 	);
 }

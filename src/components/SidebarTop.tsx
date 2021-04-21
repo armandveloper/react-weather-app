@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import styled from 'styled-components';
 import { WeatherContext } from '../context/WeatherContext';
+import { getCurrentPosition } from '../helpers/geolocation';
 import Button from './Button';
 import ButtonCircle from './ButtonCircle';
 
@@ -12,7 +13,15 @@ const SidebarTopStyled = styled.nav`
 `;
 
 function SidebarTop() {
-	const { showSearchWeather } = useContext(WeatherContext);
+	const { showSearchWeather, searchLocationByCoords } = useContext(
+		WeatherContext
+	);
+
+	const handleClick = () => {
+		getCurrentPosition().then(({ lat, lng }) => {
+			searchLocationByCoords(lat, lng);
+		});
+	};
 
 	return (
 		<SidebarTopStyled>
@@ -22,7 +31,14 @@ function SidebarTop() {
 				shadow={true}
 				text="Search for places"
 			/>
-			<ButtonCircle variant="gray" title="Click" icon="gps_fixed" />
+			{window.navigator.geolocation && (
+				<ButtonCircle
+					onClick={handleClick}
+					variant="gray"
+					title="Get weather of my current location"
+					icon="gps_fixed"
+				/>
+			)}
 		</SidebarTopStyled>
 	);
 }
